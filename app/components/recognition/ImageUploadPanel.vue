@@ -162,7 +162,7 @@ const uploadImageBatch = async (files: File[]) => {
 const generateImageId = () => Date.now() + Math.floor(Math.random() * 1000)
 
 const apiUrl = computed(() =>
-  String(config.public.apiUrl).replace(/\/$/, ''),
+  String(config.public.agentBaseUrl).replace(/\/$/, ''),
 )
 
 const normalizeRecognitionResponse = (response: unknown): RecognitionResult[] => {
