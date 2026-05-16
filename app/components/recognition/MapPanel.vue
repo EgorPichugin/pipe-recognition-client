@@ -15,8 +15,11 @@ const props = defineProps<{
   reloadKey: number | string
 }>()
 
-const baseUrl = 'http://localhost:8000/map'
-const mapUrl = computed(() => `${baseUrl}?t=${props.reloadKey}`)
+const config = useRuntimeConfig()
+const baseUrl = computed(() =>
+  `${String(config.public.apiUrl || '').replace(/\/$/, '')}/map`
+)
+const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 </script>
 
 <style scoped>
