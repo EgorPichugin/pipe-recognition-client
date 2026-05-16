@@ -40,7 +40,7 @@ function onReset() {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: 100vh;
+  min-height: 92vh;
   overflow: hidden;
   background:
     radial-gradient(circle at 16% 14%, rgba(48, 179, 158, 0.2), transparent 31rem),
@@ -85,9 +85,9 @@ function onReset() {
   display: grid;
   grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   min-width: 0;
-  min-height: 100vh;
-  padding: clamp(1.5rem, 4vw, 4.5rem);
-  gap: 1.5rem;
+  min-height: 92vh;
+  padding: clamp(1rem, 3vw, 3rem);
+  gap: 1rem;
 }
 
 .panel-glow {

@@ -215,11 +215,11 @@ const revokePreviewUrls = () => {
   z-index: 2;
   display: flex;
   min-width: 0;
-  min-height: 100vh;
-  padding: clamp(1.5rem, 4vw, 4.5rem);
+  min-height: 92vh;
+  padding: clamp(0.9rem, 2vw, 2.4rem) clamp(1.5rem, 4vw, 4.5rem) clamp(1rem, 3vw, 3rem);
   flex-direction: column;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.25rem;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -301,14 +301,15 @@ h1 {
   max-width: 22ch;
   margin: 0;
   color: #ffffff;
-  font-size: clamp(1.75rem, 2.8vw, 3.25rem);
-  line-height: 1.08;
+  font-size: clamp(1.65rem, 3vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1;
   text-wrap: balance;
 }
 
 .intro {
   max-width: 34rem;
-  margin: 1.5rem 0 0;
+  margin: 1rem 0 0;
   color: #b7c2c8;
   font-size: clamp(1rem, 1.45vw, 1.18rem);
   line-height: 1.7;
@@ -317,7 +318,7 @@ h1 {
 .dropzone {
   position: relative;
   display: grid;
-  min-height: clamp(18rem, 34vh, 25rem);
+  min-height: clamp(13rem, 25vh, 18rem);
   overflow: hidden;
   cursor: pointer;
   place-items: center;
@@ -397,7 +398,7 @@ h1 {
 .preview-grid {
   display: grid;
   width: 100%;
-  max-height: 20rem;
+  max-height: 15.5rem;
   overflow: auto;
   padding: 1.65rem;
   grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
@@ -488,7 +489,7 @@ h1 {
 
 @media (max-width: 900px) {
   .upload-panel {
-    min-height: 50vh;
+    min-height: 44vh;
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -500,7 +501,7 @@ h1 {
 
 @media (max-width: 560px) {
   .upload-panel {
-    padding: 1.2rem;
+    padding: 0.9rem 1.2rem 1.2rem;
   }
 
   .panel-header {

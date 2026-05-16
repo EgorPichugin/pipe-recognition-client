@@ -27,9 +27,9 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
   position: relative;
   display: grid;
   width: 100%;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1rem, 2.2vw, 1.5rem);
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 1.25rem;
+  gap: 0.9rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.5rem;
@@ -55,7 +55,7 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 .map-header h2 {
   margin: 0;
   color: #f6fffd;
-  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-size: clamp(1.65rem, 3vw, 2.6rem);
   font-weight: 900;
   line-height: 1;
 }
@@ -63,7 +63,7 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 .map-frame {
   position: relative;
   overflow: hidden;
-  min-height: 24rem;
+  min-height: 17rem;
   border-radius: 0.5rem;
   border: 1px solid rgba(151, 255, 235, 0.16);
   background: rgba(2, 6, 8, 0.52);
@@ -72,7 +72,7 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 .map-frame iframe {
   width: 100%;
   height: 100%;
-  min-height: 24rem;
+  min-height: 17rem;
   border: 0;
 }
 </style>
