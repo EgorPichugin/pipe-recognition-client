@@ -1,0 +1,55 @@
+# Nuxt / Nitro
+.nuxt/
+.output/
+.nitro/
+.data/
+dist/
+dist-ssr/
+
+# Dependencies
+node_modules/
+
+# Build and tool caches
+.cache/
+.vite/
+.parcel-cache/
+coverage/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local runtime files
+.env
+.env.*
+!.env.example
+.nuxt/dev-server.out.log
+.nuxt/dev-server.err.log
+
+# Package manager generated folders
+.npm/
+.pnpm-store/
+.yarn/*
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/sdks/
+!.yarn/versions/
+
+# Editors and IDEs
+.idea/
+.fleet/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
