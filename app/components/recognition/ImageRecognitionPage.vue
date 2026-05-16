@@ -2,12 +2,13 @@
   <main class="workspace-shell">
     <ImageUploadPanel
       @loading="isReportLoading = $event"
-      @recognized="report = $event"
+      @recognized="onRecognized"
     />
 
     <section class="report-shell" aria-label="Analysis report">
       <div class="panel-glow panel-glow-right"></div>
       <ReportPanel :is-loading="isReportLoading" :report="report" />
+      <MapPanel :reload-key="mapReloadKey" />
     </section>
   </main>
 </template>
@@ -16,9 +17,16 @@
 import ImageUploadPanel from '~/components/recognition/ImageUploadPanel.vue'
 import type { RecognitionResult } from '~/components/recognition/ImageUploadPanel.vue'
 import ReportPanel from '~/components/ReportPanel.vue'
+import MapPanel from '~/components/recognition/MapPanel.vue'
 
 const report = ref<RecognitionResult | null>(null)
 const isReportLoading = ref(false)
+const mapReloadKey = ref(0)
+
+function onRecognized(result: RecognitionResult) {
+  report.value = result
+  mapReloadKey.value = Date.now()
+}
 </script>
 
 <style scoped>
@@ -68,12 +76,12 @@ const isReportLoading = ref(false)
 .report-shell {
   position: relative;
   z-index: 2;
-  display: flex;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   min-width: 0;
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 4.5rem);
-  align-items: stretch;
-  justify-content: stretch;
+  gap: 1.5rem;
 }
 
 .panel-glow {
