@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      agentBaseUrl: process.env.AGENT_BASE_URL,
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || process.env.API_URL || '',
     },
   },
 })

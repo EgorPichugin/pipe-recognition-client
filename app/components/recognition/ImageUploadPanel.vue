@@ -144,7 +144,7 @@ const uploadImageBatch = async (files: File[]) => {
     formData.append('images', file)
   }
 
-  const response = await fetch(`${apiUrl.value}/recognize/upload/batch`, {
+  const response = await fetch(`${getApiUrl()}/recognize/upload/batch`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -161,9 +161,15 @@ const uploadImageBatch = async (files: File[]) => {
 
 const generateImageId = () => Date.now() + Math.floor(Math.random() * 1000)
 
-const apiUrl = computed(() =>
-  String(config.public.agentBaseUrl).replace(/\/$/, ''),
-)
+const getApiUrl = () => {
+  const apiUrl = String(config.public.apiUrl || '').trim().replace(/\/$/, '')
+
+  if (!apiUrl) {
+    throw new Error('Missing API URL. Set NUXT_PUBLIC_API_URL in deployment environment variables.')
+  }
+
+  return apiUrl
+}
 
 const normalizeRecognitionResponse = (response: unknown): RecognitionResult[] => {
   if (Array.isArray(response)) {
