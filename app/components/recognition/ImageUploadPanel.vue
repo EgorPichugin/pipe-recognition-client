@@ -23,32 +23,40 @@
         id="image-upload"
         type="file"
         accept="image/*"
-        @change="handleImageUpload"
+        multiple
+        @change="handleImageSelection"
       >
 
-      <img
-        v-if="previewUrl"
-        class="preview-image"
-        :src="previewUrl"
-        alt="Selected structural field image preview"
-      >
+      <span v-if="selectedPreviews.length" class="preview-grid">
+        <span
+          v-for="preview in selectedPreviews"
+          :key="preview.url"
+          class="preview-tile"
+        >
+          <img
+            :src="preview.url"
+            :alt="`Selected image preview: ${preview.name}`"
+          >
+          <span>{{ preview.name }}</span>
+        </span>
+      </span>
 
       <span v-else class="upload-state">
         <span class="upload-icon" aria-hidden="true"></span>
-        <span class="upload-title">Drop or select image</span>
-        <span class="upload-meta">JPG, PNG, WEBP inspection frames</span>
+        <span class="upload-title">Select images</span>
+        <span class="upload-meta">Choose multiple JPG, PNG, WEBP inspection frames</span>
       </span>
     </label>
 
     <div class="action-row">
-      <div class="file-chip" :class="{ active: selectedFileName }">
-        {{ uploadMessage || selectedFileName || 'No image selected' }}
+      <div class="file-chip" :class="{ active: selectedFiles.length }">
+        {{ uploadMessage || selectedImageSummary || 'No images selected' }}
       </div>
       <button
         class="start-button"
         type="button"
-        :disabled="!selectedFile || isUploading"
-        @click="uploadImage"
+        :disabled="!selectedFiles.length || isUploading"
+        @click="uploadImages"
       >
         {{ isUploading ? 'Sending' : 'Start' }}
       </button>
@@ -73,58 +81,51 @@ export interface RecognitionResult {
 const emit = defineEmits<{
   recognized: [result: RecognitionResult]
   loading: [isLoading: boolean]
+  reset: []
 }>()
 
-const selectedFileName = ref('')
-const previewUrl = ref('')
-const selectedFile = ref<File | null>(null)
+const selectedFiles = ref<File[]>([])
+const selectedImageSummary = ref('')
+const selectedPreviews = ref<Array<{ name: string, url: string }>>([])
 const isUploading = ref(false)
 const uploadMessage = ref('')
 
-const handleImageUpload = (event: Event) => {
+const handleImageSelection = (event: Event) => {
   const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
+  const files = Array.from(input.files ?? []).filter((file) =>
+    file.type.startsWith('image/'),
+  )
 
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-  }
+  revokePreviewUrls()
 
-  selectedFileName.value = file?.name ?? ''
-  selectedFile.value = file ?? null
-  previewUrl.value = file ? URL.createObjectURL(file) : ''
+  selectedFiles.value = files
+  selectedImageSummary.value = formatImageSummary(files)
+  selectedPreviews.value = files.map((file) => ({
+    name: file.name,
+    url: URL.createObjectURL(file),
+  }))
   uploadMessage.value = ''
+  emit('reset')
 }
 
-const uploadImage = async () => {
-  if (!selectedFile.value) {
+const uploadImages = async () => {
+  if (!selectedFiles.value.length) {
     return
   }
 
   isUploading.value = true
   emit('loading', true)
-  uploadMessage.value = 'Sending image to recognition API...'
-
-  const requestId = generateImageId()
-  const formData = new FormData()
-  formData.append('id', requestId.toString())
-  formData.append('image', selectedFile.value)
 
   try {
-    const response = await fetch('http://localhost:8000/recognize/upload', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-      },
-      body: formData,
-    })
+    uploadMessage.value = `Sending batch of ${selectedFiles.value.length} image${selectedFiles.value.length === 1 ? '' : 's'}...`
 
-    if (!response.ok) {
-      throw new Error(`Upload failed with status ${response.status}`)
+    const results = await uploadImageBatch(selectedFiles.value)
+
+    for (const result of results) {
+      emit('recognized', result)
     }
 
-    const result = await response.json() as RecognitionResult
-    emit('recognized', result)
-    uploadMessage.value = 'Image sent successfully'
+    uploadMessage.value = `Uploaded ${results.length} image${results.length === 1 ? '' : 's'} successfully`
   } catch (error) {
     uploadMessage.value =
       error instanceof Error ? error.message : 'Upload failed'
@@ -134,13 +135,67 @@ const uploadImage = async () => {
   }
 }
 
+const uploadImageBatch = async (files: File[]) => {
+  const formData = new FormData()
+
+  for (const file of files) {
+    formData.append('ids', generateImageId().toString())
+    formData.append('images', file)
+  }
+
+  const response = await fetch('http://localhost:8000/recognize/upload/batch', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    throw new Error(`Batch upload failed with status ${response.status}`)
+  }
+
+  return normalizeRecognitionResponse(await response.json())
+}
+
 const generateImageId = () => Date.now() + Math.floor(Math.random() * 1000)
 
-onBeforeUnmount(() => {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
+const normalizeRecognitionResponse = (response: unknown): RecognitionResult[] => {
+  if (Array.isArray(response)) {
+    return response as RecognitionResult[]
   }
+
+  if (
+    response &&
+    typeof response === 'object' &&
+    'results' in response &&
+    Array.isArray((response as { results: unknown }).results)
+  ) {
+    return (response as { results: RecognitionResult[] }).results
+  }
+
+  return [response as RecognitionResult]
+}
+
+const formatImageSummary = (files: File[]) => {
+  if (!files.length) {
+    return ''
+  }
+
+  return `${files.length} image${files.length === 1 ? '' : 's'} selected`
+}
+
+onBeforeUnmount(() => {
+  revokePreviewUrls()
 })
+
+const revokePreviewUrls = () => {
+  for (const preview of selectedPreviews.value) {
+    URL.revokeObjectURL(preview.url)
+  }
+
+  selectedPreviews.value = []
+}
 </script>
 
 <style scoped>
@@ -328,17 +383,41 @@ h1 {
   font-size: 0.95rem;
 }
 
-.preview-image {
-  width: min(18rem, 76%);
-  max-height: 15rem;
-  padding: 0.45rem;
-  object-fit: contain;
+.preview-grid {
+  display: grid;
+  width: 100%;
+  max-height: 20rem;
+  overflow: auto;
+  padding: 1.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.85rem;
+}
+
+.preview-tile {
+  display: grid;
+  min-width: 0;
+  gap: 0.45rem;
+}
+
+.preview-tile img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
   border: 1px solid rgba(151, 255, 235, 0.22);
   border-radius: 0.45rem;
   background: rgba(2, 6, 8, 0.72);
   box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.36),
-    0 0 36px rgba(126, 247, 225, 0.1);
+    0 14px 32px rgba(0, 0, 0, 0.32),
+    0 0 28px rgba(126, 247, 225, 0.08);
+}
+
+.preview-tile span {
+  overflow: hidden;
+  color: #9eafb7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .action-row {

@@ -6,7 +6,7 @@
         <h2>Recognition Report</h2>
       </div>
       <span class="status-pill" :class="{ active: report }">
-        {{ report ? report.status : 'Waiting' }}
+        {{ reports.length ? `${reports.length} result${reports.length === 1 ? '' : 's'}` : 'Waiting' }}
       </span>
     </div>
 
@@ -20,12 +20,24 @@
       </div>
     </div>
 
-    <div v-else-if="report" class="table-shell">
+    <div v-else-if="reports.length" class="table-shell">
       <table>
+        <thead>
+          <tr>
+            <th scope="col">Image name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Latitude</th>
+            <th scope="col">Longitude</th>
+            <th scope="col">Confidence</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr v-for="row in rows" :key="row.label">
-            <th scope="row">{{ row.label }}</th>
-            <td>{{ row.value }}</td>
+          <tr v-for="result in reports" :key="result.id">
+            <td>{{ result.image_name }}</td>
+            <td>{{ result.category }}</td>
+            <td>{{ formatCoordinate(result.latitude) }}</td>
+            <td>{{ formatCoordinate(result.longitude ?? result.longtitude) }}</td>
+            <td>{{ formatConfidence(result.confidence) }}</td>
           </tr>
         </tbody>
       </table>
@@ -45,40 +57,11 @@
 import type { RecognitionResult } from '~/components/recognition/ImageUploadPanel.vue'
 
 const props = defineProps<{
-  report: RecognitionResult | null
+  reports: RecognitionResult[]
   isLoading: boolean
 }>()
 
-const rows = computed(() => {
-  if (!props.report) {
-    return []
-  }
-
-  const longitude = props.report.longitude ?? props.report.longtitude
-
-  return [
-    {
-      label: 'Image name',
-      value: props.report.image_name,
-    },
-    {
-      label: 'Category',
-      value: props.report.category,
-    },
-    {
-      label: 'Latitude',
-      value: formatCoordinate(props.report.latitude),
-    },
-    {
-      label: 'Longitude',
-      value: formatCoordinate(longitude),
-    },
-    {
-      label: 'Confidence',
-      value: formatConfidence(props.report.confidence),
-    },
-  ]
-})
+const report = computed(() => props.reports.at(-1) ?? null)
 
 const formatCoordinate = (value: number | string | undefined) => {
   const numericValue = Number(value)
@@ -178,7 +161,7 @@ const formatConfidence = (value: number | string | undefined) => {
 }
 
 .table-shell {
-  overflow: hidden;
+  overflow: auto;
   border: 1px solid rgba(151, 255, 235, 0.16);
   border-radius: 0.5rem;
   background:
@@ -188,6 +171,7 @@ const formatConfidence = (value: number | string | undefined) => {
 }
 
 table {
+  min-width: 44rem;
   width: 100%;
   border-collapse: collapse;
 }
@@ -207,7 +191,6 @@ td {
 }
 
 th {
-  width: 42%;
   color: #8ea0a8;
   font-size: 0.78rem;
   font-weight: 850;
@@ -217,8 +200,9 @@ th {
 
 td {
   color: #f6fffd;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .empty-state {

@@ -3,11 +3,12 @@
     <ImageUploadPanel
       @loading="isReportLoading = $event"
       @recognized="onRecognized"
+      @reset="onReset"
     />
 
     <section class="report-shell" aria-label="Analysis report">
       <div class="panel-glow panel-glow-right"></div>
-      <ReportPanel :is-loading="isReportLoading" :report="report" />
+      <ReportPanel :is-loading="isReportLoading" :reports="reports" />
       <MapPanel :reload-key="mapReloadKey" />
     </section>
   </main>
@@ -19,12 +20,17 @@ import type { RecognitionResult } from '~/components/recognition/ImageUploadPane
 import ReportPanel from '~/components/ReportPanel.vue'
 import MapPanel from '~/components/recognition/MapPanel.vue'
 
-const report = ref<RecognitionResult | null>(null)
+const reports = ref<RecognitionResult[]>([])
 const isReportLoading = ref(false)
 const mapReloadKey = ref(0)
 
 function onRecognized(result: RecognitionResult) {
-  report.value = result
+  reports.value.push(result)
+  mapReloadKey.value = Date.now()
+}
+
+function onReset() {
+  reports.value = []
   mapReloadKey.value = Date.now()
 }
 </script>
