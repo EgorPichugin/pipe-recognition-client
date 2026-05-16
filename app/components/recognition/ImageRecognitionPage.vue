@@ -83,7 +83,7 @@ function onReset() {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(22rem, 1fr) minmax(20rem, 1fr);
   min-width: 0;
   min-height: 92vh;
   padding: clamp(1rem, 3vw, 3rem);
@@ -128,6 +128,7 @@ function onReset() {
   }
 
   .report-shell {
+    grid-template-rows: minmax(22rem, auto) minmax(20rem, auto);
     min-height: 50vh;
   }
 }

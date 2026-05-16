@@ -318,7 +318,8 @@ h1 {
 .dropzone {
   position: relative;
   display: grid;
-  min-height: clamp(13rem, 25vh, 18rem);
+  height: clamp(13rem, 25vh, 18rem);
+  min-height: 0;
   overflow: hidden;
   cursor: pointer;
   place-items: center;
@@ -398,7 +399,8 @@ h1 {
 .preview-grid {
   display: grid;
   width: 100%;
-  max-height: 15.5rem;
+  height: 100%;
+  max-height: 100%;
   overflow: auto;
   padding: 1.65rem;
   grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));

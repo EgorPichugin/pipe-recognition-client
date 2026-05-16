@@ -81,7 +81,8 @@ const formatConfidence = (value: number | string | undefined) => {
   position: relative;
   display: grid;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
+  min-height: 0;
   padding: clamp(1.25rem, 3vw, 2rem);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 1.75rem;
@@ -162,6 +163,7 @@ const formatConfidence = (value: number | string | undefined) => {
 
 .table-shell {
   overflow: auto;
+  min-height: 0;
   border: 1px solid rgba(151, 255, 235, 0.16);
   border-radius: 0.5rem;
   background:
@@ -207,7 +209,7 @@ td {
 
 .empty-state {
   display: grid;
-  min-height: 100%;
+  min-height: 0;
   align-content: center;
   justify-items: center;
   gap: 1.15rem;
@@ -223,7 +225,7 @@ td {
 
 .loading-state {
   display: grid;
-  min-height: 100%;
+  min-height: 0;
   align-content: center;
   gap: 1.25rem;
   padding: 2rem;
