@@ -3,6 +3,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   runtimeConfig: {
-    agentBaseUrl: process.env.API
+    agentBaseUrl: process.env.API_URL || 'http://localhost:8000',
   },
 })
