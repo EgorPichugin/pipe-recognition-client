@@ -2,12 +2,13 @@
   <main class="workspace-shell">
     <ImageUploadPanel
       @loading="isReportLoading = $event"
-      @recognized="report = $event"
+      @recognized="reports.push($event)"
+      @reset="reports = []"
     />
 
     <section class="report-shell" aria-label="Analysis report">
       <div class="panel-glow panel-glow-right"></div>
-      <ReportPanel :is-loading="isReportLoading" :report="report" />
+      <ReportPanel :is-loading="isReportLoading" :reports="reports" />
     </section>
   </main>
 </template>
@@ -17,7 +18,7 @@ import ImageUploadPanel from '~/components/recognition/ImageUploadPanel.vue'
 import type { RecognitionResult } from '~/components/recognition/ImageUploadPanel.vue'
 import ReportPanel from '~/components/ReportPanel.vue'
 
-const report = ref<RecognitionResult | null>(null)
+const reports = ref<RecognitionResult[]>([])
 const isReportLoading = ref(false)
 </script>
 
