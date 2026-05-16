@@ -89,6 +89,7 @@ const selectedImageSummary = ref('')
 const selectedPreviews = ref<Array<{ name: string, url: string }>>([])
 const isUploading = ref(false)
 const uploadMessage = ref('')
+const config = useRuntimeConfig()
 
 const handleImageSelection = (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -143,7 +144,7 @@ const uploadImageBatch = async (files: File[]) => {
     formData.append('images', file)
   }
 
-  const response = await fetch('http://localhost:8000/recognize/upload/batch', {
+  const response = await fetch(`${apiUrl.value}/recognize/upload/batch`, {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -159,6 +160,10 @@ const uploadImageBatch = async (files: File[]) => {
 }
 
 const generateImageId = () => Date.now() + Math.floor(Math.random() * 1000)
+
+const apiUrl = computed(() =>
+  String(config.public.apiUrl).replace(/\/$/, ''),
+)
 
 const normalizeRecognitionResponse = (response: unknown): RecognitionResult[] => {
   if (Array.isArray(response)) {
