@@ -232,24 +232,37 @@
           <p class="eyebrow">Hands-on demo</p>
           <h2 id="demo-title">See the pipeline run on your own photo</h2>
           <p class="intro intro-center">
-            <span class="hl-good">Try it live</span> — watch the walkthrough, then
-            upload an inspection frame and get a structured report back in seconds.
+            <a
+              href="https://pipe-recognition-client-ecru.vercel.app"
+              target="_blank"
+              rel="noopener"
+              class="hl-good hl-link"
+            >Try it live</a> — watch the walkthrough, then upload an inspection
+            frame and get a structured report back in seconds.
           </p>
         </header>
 
         <div class="demo-stage">
-          <div class="demo-video" aria-label="Demo video placeholder">
+          <div class="demo-video">
+            <video
+              class="demo-video-player"
+              controls
+              preload="metadata"
+              playsinline
+              src="/architecture/demo.mp4"
+            />
             <span class="demo-video-label">Demo video</span>
-            <span class="demo-video-play" aria-hidden="true">
-              <span class="demo-video-play-icon" />
-            </span>
-            <span class="demo-video-caption">Walkthrough coming soon</span>
           </div>
 
-          <NuxtLink to="/" class="cta-link">
+          <a
+            href="https://pipe-recognition-client-ecru.vercel.app"
+            target="_blank"
+            rel="noopener"
+            class="cta-link"
+          >
             <span>Open the prototype</span>
             <span class="cta-arrow" aria-hidden="true">→</span>
-          </NuxtLink>
+          </a>
         </div>
       </div>
     </section>
@@ -652,6 +665,18 @@ h2 {
   color: #ffadb6;
   background: rgba(255, 110, 128, 0.14);
   box-shadow: inset 0 -1px 0 rgba(255, 110, 128, 0.45);
+}
+
+a.hl-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+a.hl-link:hover {
+  color: #051312;
+  background: linear-gradient(135deg, #8dffe8, #ffd073);
+  box-shadow: 0 0 18px rgba(141, 255, 232, 0.32);
 }
 
 .kpi-strip {
@@ -1375,20 +1400,17 @@ h2 {
   overflow: hidden;
   border: 1px solid rgba(151, 255, 235, 0.22);
   border-radius: 0.7rem;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(141, 255, 232, 0.12), transparent 60%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012)),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(151, 255, 235, 0.05) 0,
-      rgba(151, 255, 235, 0.05) 1px,
-      transparent 1px,
-      transparent 16px
-    ),
-    rgba(6, 10, 13, 0.78);
+  background: rgba(6, 10, 13, 0.78);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.035),
     0 30px 80px rgba(0, 0, 0, 0.42);
+}
+
+.demo-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #050608;
 }
 
 .demo-video-label {
@@ -1404,44 +1426,8 @@ h2 {
   background: rgba(6, 10, 13, 0.6);
   border: 1px solid rgba(151, 255, 235, 0.28);
   border-radius: 999px;
+  pointer-events: none;
   backdrop-filter: blur(8px);
-}
-
-.demo-video-play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  width: clamp(4.5rem, 7vw, 6rem);
-  height: clamp(4.5rem, 7vw, 6rem);
-  place-items: center;
-  background: linear-gradient(135deg, #8dffe8, #ffd073);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 6px rgba(141, 255, 232, 0.18),
-    0 0 38px rgba(141, 255, 232, 0.45),
-    0 18px 38px rgba(0, 0, 0, 0.4);
-  transform: translate(-50%, -50%);
-}
-
-.demo-video-play-icon {
-  display: block;
-  width: 0;
-  height: 0;
-  margin-left: 0.3rem;
-  border-top: 0.85rem solid transparent;
-  border-bottom: 0.85rem solid transparent;
-  border-left: 1.35rem solid #051312;
-}
-
-.demo-video-caption {
-  position: absolute;
-  bottom: 1.2rem;
-  left: 50%;
-  color: #b7c2c8;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  transform: translateX(-50%);
 }
 
 .cta-link {
