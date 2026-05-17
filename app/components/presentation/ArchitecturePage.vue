@@ -276,13 +276,17 @@
         <div class="demo-stage">
           <div class="demo-video">
             <video
+              ref="demoVideoEl"
               class="demo-video-player"
-              controls
+              :class="{ 'demo-video-player-idle': !demoVideoStarted }"
+              :controls="demoVideoStarted"
               preload="metadata"
               playsinline
+              poster="/architecture/demo-poster.jpeg"
               src="/architecture/demo.mp4"
+              @click="startDemoVideo"
+              @play="demoVideoStarted = true"
             />
-            <span class="demo-video-label">Demo video</span>
           </div>
 
           <a
@@ -504,7 +508,7 @@ const categories = [
   },
   {
     id: 3,
-    tone: 'warn',
+    tone: 'bad',
     name: 'Measurement only',
     duct: false,
     tape: true,
@@ -512,7 +516,7 @@ const categories = [
   },
   {
     id: 4,
-    tone: 'bad',
+    tone: 'mute',
     name: 'Nothing in frame',
     duct: false,
     tape: false,
@@ -528,6 +532,18 @@ const techStack = [
   'Folium',
   'SQLite',
 ]
+
+const demoVideoEl = ref<HTMLVideoElement | null>(null)
+const demoVideoStarted = ref(false)
+
+function startDemoVideo() {
+  if (demoVideoStarted.value) return
+  demoVideoStarted.value = true
+  demoVideoEl.value?.play().catch(() => {
+    // user-gesture issue or codec error — controls are visible now so the
+    // user can still tap play on the bottom bar
+  })
+}
 
 const screenLabels = ['Problem', 'Process', 'In action', 'Live demo']
 const currentScreen = ref(0)
@@ -1415,6 +1431,14 @@ a.hl-link:hover {
   box-shadow: 0 0 20px rgba(255, 110, 128, 0.55);
 }
 
+.category-card-mute {
+  border-color: rgba(158, 175, 183, 0.32);
+}
+.category-card-mute::before {
+  background: #9eafb7;
+  box-shadow: 0 0 16px rgba(158, 175, 183, 0.4);
+}
+
 .category-head {
   display: flex;
   gap: 0.7rem;
@@ -1444,6 +1468,11 @@ a.hl-link:hover {
 .category-card-bad .category-number {
   background: #ff6e80;
   box-shadow: 0 0 18px rgba(255, 110, 128, 0.4);
+}
+.category-card-mute .category-number {
+  color: #f6fffd;
+  background: #6b7e87;
+  box-shadow: 0 0 14px rgba(158, 175, 183, 0.32);
 }
 
 .category-name {
@@ -1500,6 +1529,12 @@ a.hl-link:hover {
   background: #ffd073;
   border-color: #ffd073;
   box-shadow: 0 0 10px rgba(255, 208, 115, 0.65);
+}
+
+.category-card-bad .category-feature-on .category-feature-dot {
+  background: #ff6e80;
+  border-color: #ff6e80;
+  box-shadow: 0 0 10px rgba(255, 110, 128, 0.65);
 }
 
 .category-caption {
@@ -1617,21 +1652,8 @@ a.hl-link:hover {
   background: #050608;
 }
 
-.demo-video-label {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  padding: 0.32rem 0.7rem;
-  color: #d9fff7;
-  font-size: 0.66rem;
-  font-weight: 850;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  background: rgba(6, 10, 13, 0.6);
-  border: 1px solid rgba(151, 255, 235, 0.28);
-  border-radius: 999px;
-  pointer-events: none;
-  backdrop-filter: blur(8px);
+.demo-video-player-idle {
+  cursor: pointer;
 }
 
 .cta-link {
