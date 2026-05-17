@@ -54,16 +54,106 @@
     >
       <div class="screen-inner">
         <header class="column-header">
-          <p class="eyebrow">Training curve & architecture</p>
-          <h2 id="process-title">More labelled photos → confidence shifts left, errors fall away</h2>
+          <p class="eyebrow">Pipeline output</p>
+          <h2 id="process-title">Four inspection categories the model reports back</h2>
           <p class="intro">
-            Baseline: <span class="hl-good">200 photos labelled in 2 hackathon days</span>.
-            Drag the slider to project where another week of labelling would land the
-            confidence curve.
+            Each frame is graded by what's actually in it —
+            <span class="hl-good">cable</span> (duct) and
+            <span class="hl-good">measurement reference</span> (tape), both, one, or
+            neither. The category tells the inspector whether the report stands on
+            its own or needs a re-shoot.
           </p>
         </header>
 
         <div class="two-column">
+          <section class="category-grid" aria-label="Inspection categories">
+            <article
+              v-for="cat in categories"
+              :key="cat.id"
+              class="category-card"
+              :class="`category-card-${cat.tone}`"
+            >
+              <header class="category-head">
+                <span class="category-number">{{ cat.id }}</span>
+                <span class="category-name">{{ cat.name }}</span>
+              </header>
+              <div class="category-features">
+                <span
+                  class="category-feature"
+                  :class="{ 'category-feature-on': cat.duct }"
+                >
+                  <span class="category-feature-dot" />
+                  <span>duct</span>
+                </span>
+                <span
+                  class="category-feature"
+                  :class="{ 'category-feature-on': cat.tape }"
+                >
+                  <span class="category-feature-dot" />
+                  <span>tape</span>
+                </span>
+              </div>
+              <p class="category-caption">{{ cat.caption }}</p>
+            </article>
+          </section>
+
+          <section class="steps" aria-label="Architecture workflow">
+            <article v-for="step in steps" :key="step.number" class="step-card">
+              <div class="step-content">
+                <div class="step-number">{{ step.number }}</div>
+                <div>
+                  <h3>{{ step.title }}</h3>
+                  <p>{{ step.description }}</p>
+                </div>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="screen screen-visual"
+      data-screen="2"
+      aria-labelledby="visual-title"
+    >
+      <div class="screen-inner">
+        <header class="column-header column-header-center">
+          <p class="eyebrow">Detection in action</p>
+          <h2 id="visual-title">Real photos, real confidence — <span class="hl-good">scales with the labelling budget</span></h2>
+          <p class="intro intro-center">
+            Boxes left, distribution right. Drag the slider to see how the
+            confidence curve sharpens as the training pool grows.
+          </p>
+        </header>
+
+        <div class="visual-grid">
+          <section class="photo-stage" aria-label="Photo processing preview">
+            <div class="photo-placeholder">
+              <div class="photo-frame">
+                <img
+                  class="architecture-image"
+                  src="/architecture/original-photo.jpg"
+                  alt="Original field photo"
+                >
+              </div>
+              <p>Original Photo</p>
+            </div>
+
+            <div class="photo-arrow" aria-hidden="true" />
+
+            <div class="photo-placeholder">
+              <div class="photo-frame">
+                <img
+                  class="architecture-image"
+                  src="/architecture/yolo-detection.jpg"
+                  alt="Field photo after YOLO detection"
+                >
+              </div>
+              <p>After YOLO Detection</p>
+            </div>
+          </section>
+
           <section class="histogram-card" aria-labelledby="histogram-title">
             <header class="histogram-header">
               <p class="eyebrow">Confidence histogram</p>
@@ -152,71 +242,6 @@
                 <span class="legend-swatch legend-swatch-wrong" />False (real ≠ YOLO)
               </span>
             </footer>
-          </section>
-
-          <section class="steps" aria-label="Architecture workflow">
-            <article v-for="step in steps" :key="step.number" class="step-card">
-              <div class="step-content">
-                <div class="step-number">{{ step.number }}</div>
-                <div>
-                  <h3>{{ step.title }}</h3>
-                  <p>{{ step.description }}</p>
-                </div>
-              </div>
-            </article>
-          </section>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="screen screen-visual"
-      data-screen="2"
-      aria-labelledby="visual-title"
-    >
-      <div class="screen-inner">
-        <header class="column-header column-header-center">
-          <p class="eyebrow">Detection in action</p>
-          <h2 id="visual-title">One photo or <span class="hl-good">a 500-strong batch</span> — same pipeline</h2>
-          <p class="intro intro-center">
-            Detect, geolocate, report. Every frame lands on the map and feeds a
-            consolidated summary — no per-photo babysitting, no per-call invoice.
-          </p>
-        </header>
-
-        <div class="visual-grid">
-          <section class="photo-stage" aria-label="Photo processing preview">
-            <div class="photo-placeholder">
-              <div class="photo-frame">
-                <img
-                  class="architecture-image"
-                  src="/architecture/original-photo.jpg"
-                  alt="Original field photo"
-                >
-              </div>
-              <p>Original Photo</p>
-            </div>
-
-            <div class="photo-arrow" aria-hidden="true" />
-
-            <div class="photo-placeholder">
-              <div class="photo-frame">
-                <img
-                  class="architecture-image"
-                  src="/architecture/yolo-detection.jpg"
-                  alt="Field photo after YOLO detection"
-                >
-              </div>
-              <p>After YOLO Detection</p>
-            </div>
-          </section>
-
-          <section class="capability-strip visual-grid-tiles" aria-label="Capabilities">
-            <article v-for="cap in capabilities" :key="cap.title" class="cap-card">
-              <p class="cap-eyebrow">{{ cap.eyebrow }}</p>
-              <h3>{{ cap.title }}</h3>
-              <p class="cap-caption">{{ cap.caption }}</p>
-            </article>
           </section>
         </div>
       </div>
@@ -454,26 +479,38 @@ const steps = [
   },
 ]
 
-const capabilities = [
+const categories = [
   {
-    eyebrow: 'Workflow',
-    title: 'Upload one — or 500+',
-    caption: 'Drop a single frame or an entire inspection batch. Same pipeline, same accuracy, processed in parallel.',
+    id: 1,
+    tone: 'good',
+    name: 'Full context',
+    duct: true,
+    tape: true,
+    caption: 'Cable AND measurement reference visible — the report stands on its own.',
   },
   {
-    eyebrow: 'Output',
-    title: 'Auto-mapped + reported',
-    caption: 'Each photo is geo-located on a map and rolled into a consolidated summary report.',
+    id: 2,
+    tone: 'warn',
+    name: 'Cable only',
+    duct: true,
+    tape: false,
+    caption: 'Cable visible, measurement reference missing — partial context.',
   },
   {
-    eyebrow: 'Scene complexity',
-    title: 'Many objects per frame',
-    caption: 'Detect dozens of pipes, fittings, and structural elements in a single forward pass.',
+    id: 3,
+    tone: 'warn',
+    name: 'Measurement only',
+    duct: false,
+    tape: true,
+    caption: 'Measurement in frame, cable not visible — partial context.',
   },
   {
-    eyebrow: 'Roadmap',
-    title: 'Train new classes via UI',
-    caption: 'Self-service labelling tool means non-engineers can extend the model to new pipe types.',
+    id: 4,
+    tone: 'bad',
+    name: 'Nothing in frame',
+    duct: false,
+    tape: false,
+    caption: 'Neither cable nor measurement — flag for re-shoot.',
   },
 ]
 
@@ -1261,7 +1298,7 @@ a.hl-link:hover {
 .photo-frame {
   position: relative;
   aspect-ratio: 4 / 3;
-  max-height: clamp(15rem, 44vh, 28rem);
+  max-height: clamp(13rem, 30vh, 19rem);
   overflow: hidden;
   margin: 0 auto;
   border: 1px solid rgba(151, 255, 235, 0.22);
@@ -1314,24 +1351,185 @@ a.hl-link:hover {
   gap: 0.85rem;
 }
 
-.visual-grid {
+.category-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
-  gap: clamp(1rem, 2vw, 1.75rem);
-  align-items: stretch;
-}
-
-.capability-strip.visual-grid-tiles {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 0.7rem;
+  gap: 0.95rem;
   align-self: stretch;
 }
 
-.capability-strip.visual-grid-tiles .cap-card {
+.category-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding: 1.1rem 1.2rem 1.2rem;
+  overflow: hidden;
+  border: 1px solid rgba(151, 255, 235, 0.18);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018)),
+    rgba(6, 10, 13, 0.68);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+    0 16px 42px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.category-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  content: "";
+}
+
+.category-card-good {
+  border-color: rgba(141, 255, 232, 0.42);
+}
+.category-card-good::before {
+  background: #8dffe8;
+  box-shadow: 0 0 20px rgba(141, 255, 232, 0.55);
+}
+
+.category-card-warn {
+  border-color: rgba(255, 208, 115, 0.42);
+}
+.category-card-warn::before {
+  background: #ffd073;
+  box-shadow: 0 0 20px rgba(255, 208, 115, 0.55);
+}
+
+.category-card-bad {
+  border-color: rgba(255, 110, 128, 0.42);
+}
+.category-card-bad::before {
+  background: #ff6e80;
+  box-shadow: 0 0 20px rgba(255, 110, 128, 0.55);
+}
+
+.category-head {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+
+.category-number {
+  display: inline-grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  place-items: center;
+  color: #051312;
+  font-size: 0.85rem;
+  font-weight: 900;
+  border-radius: 50%;
+}
+
+.category-card-good .category-number {
+  background: #8dffe8;
+  box-shadow: 0 0 18px rgba(141, 255, 232, 0.4);
+}
+.category-card-warn .category-number {
+  background: #ffd073;
+  box-shadow: 0 0 18px rgba(255, 208, 115, 0.4);
+}
+.category-card-bad .category-number {
+  background: #ff6e80;
+  box-shadow: 0 0 18px rgba(255, 110, 128, 0.4);
+}
+
+.category-name {
+  color: #f6fffd;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.category-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.7rem;
+}
+
+.category-feature {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.25rem 0.6rem 0.25rem 0.5rem;
+  color: #9eafb7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: rgba(6, 10, 13, 0.55);
+  border: 1px solid rgba(151, 255, 235, 0.14);
+  border-radius: 999px;
+  opacity: 0.6;
+}
+
+.category-feature-on {
+  color: #d9fff7;
+  opacity: 1;
+  border-color: rgba(151, 255, 235, 0.3);
+}
+
+.category-feature-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid rgba(151, 255, 235, 0.35);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.category-card-good .category-feature-on .category-feature-dot {
+  background: #8dffe8;
+  border-color: #8dffe8;
+  box-shadow: 0 0 10px rgba(141, 255, 232, 0.65);
+}
+
+.category-card-warn .category-feature-on .category-feature-dot {
+  background: #ffd073;
+  border-color: #ffd073;
+  box-shadow: 0 0 10px rgba(255, 208, 115, 0.65);
+}
+
+.category-caption {
+  margin: 0;
+  color: #9eafb7;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  align-items: center;
+}
+
+.visual-grid .photo-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(0.6rem, 1.4vh, 1.1rem);
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.visual-grid .photo-arrow {
+  justify-self: center;
+  width: 2px;
+  height: clamp(1.4rem, 2.4vh, 2.4rem);
+  background: linear-gradient(180deg, rgba(141, 255, 232, 0.25), #8dffe8);
+}
+
+.visual-grid .photo-arrow::after {
+  top: auto;
+  right: 50%;
+  bottom: -2px;
+  transform: translateX(50%) rotate(135deg);
 }
 
 .cap-card {
