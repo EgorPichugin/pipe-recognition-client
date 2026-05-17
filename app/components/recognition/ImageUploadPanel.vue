@@ -318,7 +318,7 @@ h1 {
 .dropzone {
   position: relative;
   display: grid;
-  height: clamp(13rem, 25vh, 18rem);
+  height: 18rem;
   min-height: 0;
   overflow: hidden;
   cursor: pointer;
@@ -498,6 +498,10 @@ h1 {
 
   h1 {
     max-width: 22ch;
+  }
+
+  .dropzone {
+    height: 16rem;
   }
 }
 

@@ -164,6 +164,7 @@ const formatConfidence = (value: number | string | undefined) => {
 .table-shell {
   overflow: auto;
   min-height: 0;
+  height: 100%;
   border: 1px solid rgba(151, 255, 235, 0.16);
   border-radius: 0.5rem;
   background:
@@ -210,6 +211,7 @@ td {
 .empty-state {
   display: grid;
   min-height: 0;
+  height: 100%;
   align-content: center;
   justify-items: center;
   gap: 1.15rem;
@@ -226,6 +228,7 @@ td {
 .loading-state {
   display: grid;
   min-height: 0;
+  height: 100%;
   align-content: center;
   gap: 1.25rem;
   padding: 2rem;

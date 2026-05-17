@@ -27,6 +27,8 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
   position: relative;
   display: grid;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   padding: clamp(1rem, 2.2vw, 1.5rem);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.9rem;
@@ -63,7 +65,8 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 .map-frame {
   position: relative;
   overflow: hidden;
-  min-height: 17rem;
+  height: 100%;
+  min-height: 0;
   border-radius: 0.5rem;
   border: 1px solid rgba(151, 255, 235, 0.16);
   background: rgba(2, 6, 8, 0.52);
@@ -72,7 +75,7 @@ const mapUrl = computed(() => `${baseUrl.value}?t=${props.reloadKey}`)
 .map-frame iframe {
   width: 100%;
   height: 100%;
-  min-height: 17rem;
+  min-height: 0;
   border: 0;
 }
 </style>
