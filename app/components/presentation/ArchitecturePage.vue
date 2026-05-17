@@ -264,6 +264,12 @@
               class="hl-good hl-link"
             >Try it live</a> — watch the walkthrough, then upload an inspection
             frame and get a structured report back in seconds.
+            <a
+              href="https://github.com/EgorPichugin/pipe_recognition"
+              target="_blank"
+              rel="noopener"
+              class="hl-good hl-link"
+            >Code &amp; Documentation</a> on GitHub.
           </p>
         </header>
 
@@ -1666,6 +1672,34 @@ a.hl-link:hover {
   font-size: 1.15em;
   line-height: 1;
 }
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: center;
+}
+
+.cta-link-secondary {
+  color: #d9fff7;
+  background: rgba(6, 10, 13, 0.55);
+  border: 1px solid rgba(151, 255, 235, 0.32);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 12px 28px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(8px);
+}
+
+.cta-link-secondary:hover {
+  color: #f6fffd;
+  background: rgba(141, 255, 232, 0.12);
+  border-color: rgba(141, 255, 232, 0.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 16px 32px rgba(0, 0, 0, 0.42),
+    0 0 22px rgba(141, 255, 232, 0.18);
+}
+
 
 .scroll-nav {
   position: fixed;
